@@ -64,4 +64,22 @@ public class UsuarioController {
 		}
 		return "redirect:/usuario/autentica";
 	}
+	
+	@GetMapping("/recuperasenha")
+	public ModelAndView recuperaSenha(RedirectAttributes redirectAttributes) {
+		ModelAndView mv = new ModelAndView("usuario/autentica");
+		mv.addObject("usuario", new Usuario());
+		return mv;
+	}
+	
+	@GetMapping("/recuperasenha/{chave}")
+	public String login(String chave, RedirectAttributes redirectAttributes) {
+		Usuario usuario = new Usuario();
+		usuario.setId(Integer.valueOf(chave.split("-")[0]));
+		usuario.setEmail(chave.split("-")[2]);
+		usuario = service.findIdEmail(usuario);
+		redirectAttributes.addFlashAttribute("id", usuario.getId());
+		redirectAttributes.addFlashAttribute("email", usuario.getEmail());
+		return "redirect:/usuario/recuperasenha";
+	}
 }

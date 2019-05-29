@@ -21,6 +21,11 @@ public class UsuarioService {
 		return usuario;
 	}
 	
+	public Usuario findIdEmail(Usuario usuario) {
+		usuario = repository.findByIdEmail(usuario.getId(), usuario.getEmail());
+		return usuario;
+	}
+	
 	public Usuario insere(Usuario usuario) {
 		usuario.setId(null);
 		usuario.setSenha(security.encriptaSenha(usuario.getSenha()));
