@@ -19,7 +19,7 @@ public class UsuarioController {
 	private UsuarioService service;
 	
 	@GetMapping("/adiciona")
-	public ModelAndView adiciona() {
+	public ModelAndView adiciona(RedirectAttributes redirectAttributes) {
 		ModelAndView mv = new ModelAndView("usuario/adiciona");
 		mv.addObject("usuario", new Usuario());
 		return mv;
@@ -32,9 +32,9 @@ public class UsuarioController {
 			redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
 		} else {
 			redirectAttributes.addFlashAttribute("mensagem", "Novo usuário criado com sucesso.");
-			redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+			redirectAttributes.addFlashAttribute("alertClass", "alert-success");
 			service.insere(usuario);
 		}
-		return "redirect:/adiciona";
+		return "redirect:/usuario/adiciona";
 	}
 }

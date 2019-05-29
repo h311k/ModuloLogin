@@ -14,6 +14,7 @@
 				<strong>Criar Novo Usuário</strong>
 			</div>
 			<div class="panel-body">
+				<div th:if="${mensagem}" th:text="${mensagem}" th:class="${'alert ' + alertClass}"></div>
 				<form class="form-horizontal" th:object="${usuario}" th:action="@{/usuario/insere}" method="POST"  style="margim: 10px;">
 					<div class="form-group">
 						<fieldset>
@@ -29,7 +30,6 @@
 						<button type="submit" class="btn btn-sm btn-primary">Salvar</button>
 						<!-- <a th:href="@{/usuario/login}" class="btn btn-sm btn-default">Cancelar</a> -->
 					</div>
-					<div th:if="${mensagem}" th:text="${mensagem}" th:class="${'alert ' + alertClass}"></div>
 				</form>
 			</div>
 		</div>
