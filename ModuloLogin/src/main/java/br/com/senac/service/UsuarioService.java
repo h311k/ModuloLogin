@@ -15,7 +15,7 @@ public class UsuarioService {
 	
 	Security security = new Security();
 	
-	public Usuario buscaUsuarioSenha(Usuario usuario) {
+	public Usuario findUsuarioSenha(Usuario usuario) {
 		usuario.setSenha(security.encriptaSenha(usuario.getSenha()));
 		usuario = repository.findByUsuarioSenha(usuario.getEmail(), usuario.getSenha());
 		return usuario;

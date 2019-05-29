@@ -37,4 +37,31 @@ public class UsuarioController {
 		}
 		return "redirect:/usuario/adiciona";
 	}
+	
+	@GetMapping("/autentica")
+	public ModelAndView autentica(RedirectAttributes redirectAttributes) {
+		ModelAndView mv = new ModelAndView("usuario/autentica");
+		mv.addObject("usuario", new Usuario());
+		return mv;
+	}
+	
+	@PostMapping("/login")
+	public String login(Usuario usuario, RedirectAttributes redirectAttributes) {
+		if(usuario.getEmail().equals("") || usuario.getSenha().equals("")) {
+			redirectAttributes.addFlashAttribute("mensagem", "Os campos de usuário e senha são obrigatórios.");
+			redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+		} else {
+			redirectAttributes.addFlashAttribute("mensagem", "Novo usuário criado com sucesso.");
+			redirectAttributes.addFlashAttribute("alertClass", "alert-success");
+			usuario = service.findUsuarioSenha(usuario);
+			if(usuario==null) {
+				redirectAttributes.addFlashAttribute("mensagem", "Nome de usuário ou senha inválidos.");
+				redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+			} else {
+				redirectAttributes.addFlashAttribute("mensagem", "Novo usuário autenticado com sucesso.");
+				redirectAttributes.addFlashAttribute("alertClass", "alert-success");
+			}
+		}
+		return "redirect:/usuario/autentica";
+	}
 }
