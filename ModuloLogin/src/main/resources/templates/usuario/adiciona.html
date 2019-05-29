@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Criar Novo Usuário</title>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"></link>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="panel-heading" align="center">
+				<strong>Criar Novo Usuário</strong>
+			</div>
+			<div class="panel-body">
+				<form class="form-horizontal" th:object="${usuario}" th:action="@{/usuario/insere}" method="POST"  style="margim: 10px;">
+					<div class="form-group">
+						<fieldset>
+							<div class="form-group row">
+								<label>E-mail</label>
+								<input type="email" class="form-control input-sm" th:field="*{email}" autofocus="autofocus" placeholder="usuario@dominio.com.br" maxlength="50"/>
+								<label>Senha</label>
+								<input type="password" class="form-control input-sm" th:field="*{senha}" autofocus="autofocus" placeholder="senhaforte" maxlength="100"/>
+							</div>					
+						</fieldset>
+					</div>
+					<div align="center">
+						<button type="submit" class="btn btn-sm btn-primary">Salvar</button>
+						<!-- <a th:href="@{/usuario/login}" class="btn btn-sm btn-default">Cancelar</a> -->
+					</div>
+					<div th:if="${mensagem}" th:text="${mensagem}" th:class="${'alert ' + alertClass}"></div>
+				</form>
+			</div>
+		</div>
+	</body>
+</html>
