@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -66,20 +67,18 @@ public class UsuarioController {
 	}
 	
 	@GetMapping("/recuperasenha")
-	public ModelAndView recuperaSenha(RedirectAttributes redirectAttributes) {
-		ModelAndView mv = new ModelAndView("usuario/autentica");
-		mv.addObject("usuario", new Usuario());
+	public ModelAndView recuperaSenha(Usuario usuario) {
+		ModelAndView mv = new ModelAndView("usuario/recuperasenha");
+		mv.addObject("usuario", usuario);
 		return mv;
 	}
 	
-	@GetMapping("/recuperasenha/{chave}")
-	public String login(String chave, RedirectAttributes redirectAttributes) {
+	@GetMapping("/recuperasenha/decode")
+	public ModelAndView login(@RequestParam String chave) {
 		Usuario usuario = new Usuario();
 		usuario.setId(Integer.valueOf(chave.split("-")[0]));
-		usuario.setEmail(chave.split("-")[2]);
+		usuario.setEmail(chave.split("-")[1]);
 		usuario = service.findIdEmail(usuario);
-		redirectAttributes.addFlashAttribute("id", usuario.getId());
-		redirectAttributes.addFlashAttribute("email", usuario.getEmail());
-		return "redirect:/usuario/recuperasenha";
+		return recuperaSenha(usuario);
 	}
 }
