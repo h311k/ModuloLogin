@@ -11,6 +11,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.senac.domain.Usuario;
 import br.com.senac.service.UsuarioService;
+import br.com.senac.util.Security;
 
 @Controller
 @RequestMapping("/usuario")
@@ -18,6 +19,8 @@ public class UsuarioController {
 
 	@Autowired
 	private UsuarioService service;
+	
+	Security security = new Security();
 	
 	@GetMapping("/adiciona")
 	public ModelAndView adiciona(RedirectAttributes redirectAttributes) {
@@ -66,6 +69,14 @@ public class UsuarioController {
 		return "redirect:/usuario/autentica";
 	}
 	
+	@PostMapping("/atualizasenha")
+	public ModelAndView atualizaSenha(Usuario usuario) {
+		usuario = service.atualizaSenha(usuario);
+		ModelAndView mv = new ModelAndView("usuario/autentica");
+		mv.addObject("usuario", new Usuario());
+		return mv;
+	}
+	
 	@GetMapping("/recuperasenha")
 	public ModelAndView recuperaSenha(Usuario usuario) {
 		ModelAndView mv = new ModelAndView("usuario/recuperasenha");
@@ -75,6 +86,8 @@ public class UsuarioController {
 	
 	@GetMapping("/recuperasenha/decode")
 	public ModelAndView login(@RequestParam String chave) {
+		chave = security.encode(chave); 
+		chave = security.decode(chave);
 		Usuario usuario = new Usuario();
 		usuario.setId(Integer.valueOf(chave.split("-")[0]));
 		usuario.setEmail(chave.split("-")[1]);

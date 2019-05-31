@@ -31,4 +31,9 @@ public class UsuarioService {
 		usuario.setSenha(security.encriptaSenha(usuario.getSenha()));
 		return repository.save(usuario);
 	}
+	
+	public Usuario atualizaSenha(Usuario usuario) {
+		usuario.setSenha(security.encriptaSenha(usuario.getSenha()));
+		return repository.save(usuario);
+	}
 }
