@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.senac.domain.EmailAdministrativo;
+import br.com.senac.domain.Usuario;
 import br.com.senac.repository.EmailAdministrativoRepository;
 import br.com.senac.service.exception.ObjectNotFoundException;
 
@@ -24,4 +25,5 @@ public class EmailAdministrativoService {
 		Optional<EmailAdministrativo> emailAdministrativo = repository.findById(id);
 		return emailAdministrativo.orElseThrow(() -> new ObjectNotFoundException("E-Mail não encontrado! Id: "+id+", Tipo: "+EmailAdministrativo.class.getName()));
 	}
+	
 }

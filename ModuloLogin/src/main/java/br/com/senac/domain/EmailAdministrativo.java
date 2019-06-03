@@ -22,10 +22,10 @@ public class EmailAdministrativo implements Serializable {
 	@Column(length = 45)
 	private String nome;
 	
-	@Column(length = 45)
+	@Column(length = 14)
 	private String host;
 	
-	@Column(length = 6)
+	@Column(length = 3)
 	private String porta;
 	
 	@Column(length = 45)
