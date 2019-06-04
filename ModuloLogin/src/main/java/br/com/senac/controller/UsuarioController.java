@@ -14,6 +14,7 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -110,10 +111,12 @@ public class UsuarioController {
 		return recuperaSenha(usuario);
 	}
 
-	@GetMapping("/eviaemailrecuperacaosenha")
-	private String enviaEmailRecuperacaoSenha(Usuario usuario) {
+	@GetMapping("/eviaemailrecuperacaosenha/{email}")
+	private String enviaEmailRecuperacaoSenha(@PathVariable("email") String email) {
+		Usuario usuario = new Usuario();
+		usuario.setEmail(email);
 		usuario = service.findByEmail(usuario);
-		String token = security.encode(usuario.getId() + "-" + usuario.getSenha());
+		String token = security.encode(usuario.getId() + "-" + usuario.getEmail());
 		String url = "http://localhost:8080/usuario/recuperasenha/decode?chave=" + token;
 		EmailAdministrativo mail = mailService.busca(1);
 

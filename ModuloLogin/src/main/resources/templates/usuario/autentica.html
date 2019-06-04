@@ -28,7 +28,7 @@
 					</div>
 					<div align="center">
 						<button type="submit" class="btn btn-sm btn-primary">Login</button>
-						<a th:href="@{/usuario/eviaemailrecuperacaosenha}" th:object="${usuario}" class="btn btn-sm btn-default">Esqueci a senha</a>
+						<a th:href="@{/usuario/eviaemailrecuperacaosenha/{email}(email=${usuario.email})}" class="btn btn-sm btn-default">Esqueci a senha</a>
 					</div>
 				</form>
 			</div>
