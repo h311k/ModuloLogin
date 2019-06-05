@@ -4,31 +4,28 @@
 		<meta charset="UTF-8">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<title>Login</title>
+		<title>Recupere sua Senha</title>
 		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"></link>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	</head>
 	<body>
 		<div class="container">
 			<div class="panel-heading" align="center">
-				<strong>Login</strong>
+				<strong>Digite seu email</strong>
 			</div>
 			<div class="panel-body">
 				<div th:if="${mensagem}" th:text="${mensagem}" th:class="${'alert ' + alertClass}"></div>
-				<form class="form-horizontal" th:object="${usuario}" th:action="@{/usuario/login}" method="POST"  style="margim: 10px;">
+				<form class="form-horizontal" th:object="${usuario}" th:action="@{/usuario/enviaemailrecuperacaosenha}" method="POST"  style="margim: 10px;">
 					<div class="form-group">
 						<fieldset>
 							<div class="form-group row">
 								<label>E-mail</label>
 								<input type="email" class="form-control input-sm" th:field="*{email}" autofocus="autofocus" placeholder="usuario@dominio.com.br" maxlength="50"/>
-								<label>Senha</label>
-								<input type="password" class="form-control input-sm" th:field="*{senha}" autofocus="autofocus" placeholder="senhaforte" maxlength="100"/>
 							</div>					
 						</fieldset>
 					</div>
 					<div align="center">
-						<button type="submit" class="btn btn-sm btn-primary">Login</button>
-						<a th:href="@{/usuario/esquecisenha}" class="btn btn-sm btn-default">Esqueci a senha</a>
+						<button type="submit" class="btn btn-sm btn-primary">Enviar E-mail de recuperação de senha</button>
 					</div>
 				</form>
 			</div>
