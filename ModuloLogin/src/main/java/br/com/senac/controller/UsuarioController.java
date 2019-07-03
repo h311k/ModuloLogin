@@ -2,6 +2,7 @@ package br.com.senac.controller;
 
 import java.util.Properties;
 
+import javax.inject.Inject;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -12,6 +13,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +33,10 @@ import br.com.senac.util.Security;
 @Controller
 @RequestMapping("/usuario")
 public class UsuarioController {
-
+	
+	@Autowired
+	private Facebook facebook;
+	
 	@Autowired
 	private UsuarioService service;
 
@@ -83,6 +90,12 @@ public class UsuarioController {
 			}
 		}
 		return "redirect:/usuario/autentica";
+	}
+	
+	@PostMapping("/conectafacebook")
+	public void conectaFacebook() {
+		User userProfile = facebook.userOperations().getUserProfile();
+		System.out.println(userProfile.getFirstName());
 	}
 
 	@PostMapping("/atualizasenha")
