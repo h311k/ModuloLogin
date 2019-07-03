@@ -25,8 +25,8 @@ public class Init implements ApplicationListener<ContextRefreshedEvent> {
 		mail.setHost("smtp.gmail.com");
 		mail.setPorta("465");
 		mail.setNome("recuperacaoSenha");
-		mail.setUsuario("email");
-		mail.setSenha(security.encode("senha"));
+		mail.setUsuario("seu@email.com");
+		mail.setSenha(security.encode("senhaforte"));
 		
 		mailRepository.save(mail);
 		

@@ -2,7 +2,6 @@ package br.com.senac.controller;
 
 import java.util.Properties;
 
-import javax.inject.Inject;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -13,29 +12,27 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.social.connect.ConnectionRepository;
-import org.springframework.social.facebook.api.Facebook;
-import org.springframework.social.facebook.api.User;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.senac.domain.EmailAdministrativo;
 import br.com.senac.domain.Usuario;
 import br.com.senac.service.EmailAdministrativoService;
+import br.com.senac.service.FacebookService;
 import br.com.senac.service.UsuarioService;
 import br.com.senac.util.Security;
 
-@Controller
+@RestController
 @RequestMapping("/usuario")
 public class UsuarioController {
 	
 	@Autowired
-	private Facebook facebook;
+    FacebookService facebookService;
 	
 	@Autowired
 	private UsuarioService service;
@@ -53,16 +50,18 @@ public class UsuarioController {
 	}
 
 	@PostMapping("/insere")
-	public String salva(Usuario usuario, RedirectAttributes redirectAttributes) {
+	public ModelAndView salva(Usuario usuario, RedirectAttributes redirectAttributes) {
+		ModelAndView mv = new ModelAndView("usuario/adiciona");
 		if (usuario.getEmail().equals("") || usuario.getSenha().equals("")) {
-			redirectAttributes.addFlashAttribute("mensagem", "Os campos de usuário e senha são obrigatórios.");
-			redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+			mv.addObject("mensagem", "Os campos de usuário e senha são obrigatórios.");
+			mv.addObject("alertClass", "alert-danger");
 		} else {
-			redirectAttributes.addFlashAttribute("mensagem", "Novo usuário criado com sucesso.");
-			redirectAttributes.addFlashAttribute("alertClass", "alert-success");
+			mv.addObject("mensagem", "Novo usuário autenticado com sucesso.");
+			mv.addObject("alertClass", "alert-success");
 			service.insere(usuario);
+			mv = new ModelAndView("usuario/autentica");
 		}
-		return "redirect:/usuario/adiciona";
+		return mv;
 	}
 
 	@GetMapping("/autentica")
@@ -73,29 +72,39 @@ public class UsuarioController {
 	}
 
 	@PostMapping("/login")
-	public String login(Usuario usuario, RedirectAttributes redirectAttributes) {
+	public ModelAndView login(Usuario usuario, RedirectAttributes redirectAttributes) {
+		ModelAndView mv = new ModelAndView("home/home");
 		if (usuario.getEmail().equals("") || usuario.getSenha().equals("")) {
-			redirectAttributes.addFlashAttribute("mensagem", "Os campos de usuário e senha são obrigatórios.");
-			redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+			mv.addObject("mensagem", "Os campos de usuário e senha são obrigatórios.");
+			mv.addObject("alertClass", "alert-danger");
 		} else {
-			redirectAttributes.addFlashAttribute("mensagem", "Novo usuário criado com sucesso.");
-			redirectAttributes.addFlashAttribute("alertClass", "alert-success");
+			mv.addObject("mensagem", "Novo usuário criado com sucesso.");
+			mv.addObject("alertClass", "alert-success");
 			usuario = service.findUsuarioSenha(usuario);
 			if (usuario == null) {
-				redirectAttributes.addFlashAttribute("mensagem", "Nome de usuário ou senha inválidos.");
-				redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
+				mv = new ModelAndView("usuario/autentica");
+				mv.addObject("mensagem", "Nome de usuário ou senha inválidos.");
+				mv.addObject("alertClass", "alert-danger");
 			} else {
-				redirectAttributes.addFlashAttribute("mensagem", "Novo usuário autenticado com sucesso.");
-				redirectAttributes.addFlashAttribute("alertClass", "alert-success");
+				mv.addObject("email", usuario.getEmail());
+				mv.addObject("mensagem", "Novo usuário autenticado com sucesso.");
+				mv.addObject("alertClass", "alert-success");
 			}
 		}
-		return "redirect:/usuario/autentica";
+		return mv;
 	}
 	
-	@PostMapping("/conectafacebook")
-	public void conectaFacebook() {
-		User userProfile = facebook.userOperations().getUserProfile();
-		System.out.println(userProfile.getFirstName());
+	@GetMapping("/conectafacebook")
+	public ModelAndView conectaFacebook() {
+		return new ModelAndView("redirect:" + facebookService.createFacebookAuthorizationURL());
+	}
+	
+	@GetMapping("/facebook")
+	public ModelAndView createFacebookAccessToken(@RequestParam("code") String code){
+	    facebookService.createFacebookAccessToken(code);
+	    ModelAndView mv = new ModelAndView("home/home");
+	    mv.addObject("email", facebookService.getEmail());
+	    return mv;
 	}
 
 	@PostMapping("/atualizasenha")
@@ -131,7 +140,7 @@ public class UsuarioController {
 	}
 
 	@PostMapping("/enviaemailrecuperacaosenha")
-	private String enviaEmailRecuperacaoSenha(Usuario usuario) {
+	private ModelAndView enviaEmailRecuperacaoSenha(Usuario usuario) {
 		usuario = service.findByEmail(usuario);
 		String token = security.encode(usuario.getId() + "-" + usuario.getEmail());
 		String url = "http://localhost:8080/usuario/recuperasenha/decode?chave=" + token;
@@ -163,7 +172,7 @@ public class UsuarioController {
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
-		
-		return "redirect:/usuario/autentica";
+		ModelAndView mv = new ModelAndView("usuario/autentica");
+		return mv;
 	}
 }

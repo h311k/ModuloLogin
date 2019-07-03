@@ -23,11 +23,8 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-12 text-center">
-						<h1 class="mt-5">Connect to Facebook:</h1>
-						<p class="lead">Ao clicar em conectar, será solicitado a você que autorize essa aplicação.</p>
-
-						<form action="/usuario/conectafacebook" method="POST">
-							<input type="hidden" name="scope" value="user_posts" />
+						<form action="/usuario/conectafacebook" method="GET">
+							<!-- <input type="hidden" name="scope" value="email" /> -->
 
 							<button class="btn btn-default" type="submit">Conectar com o facebook</button>
 						</form>
